@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:weather/config/config.dart';
+
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class AppCountryWidget extends StatefulWidget {
   final props;
@@ -17,6 +21,29 @@ class AppCountryWidgetState extends State<AppCountryWidget> {
   final Function removeCountry;
 
   AppCountryWidgetState(this.props, this.removeCountry);
+
+  void fetchWeather() async {
+    String apiMethod = "/current";
+    print("Start Request to: $apiMethod");
+    if (this.props != null) {
+      var response = await http.get(
+        Uri.http(weatherUrl, apiMethod, {"access_key": weatherApiKey, "query": this.props['name']})
+      );
+
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+        print(data);
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      fetchWeather();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
