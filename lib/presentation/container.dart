@@ -39,6 +39,7 @@ class AppContainerState extends State<AppContainer> {
                 itemCount: countries.length,
                 itemBuilder: (BuildContext context, int index) {
                   return Container(
+                    key: ObjectKey(countries[index]),
                     child: new AppCountryWidget(countries[index], removeCountry),
                   );
                 },
