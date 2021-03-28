@@ -45,6 +45,7 @@ class AppInputFieldsState extends State<AppInputFields> {
           "code": data['alpha3Code'],
         };
       });
+      print("Response: OK");
     } else {
       setState(() {
         countryNotFound = true;
