@@ -17,13 +17,20 @@ class AppInputFields extends StatefulWidget {
 
 class AppInputFieldsState extends State<AppInputFields> {
   bool countryNotFound = false;
-  var countryProps;
+  var countryProps = {
+    "name": "default",
+    "code": "DF",
+  };
+  String enteredCountryName;
 
   final Function addCountry;
   AppInputFieldsState(this.addCountry);
   
   fetchCountries(String term) async {
     String apiMethod = "/rest/v2/name/";
+    setState(() {
+      this.enteredCountryName = term;
+    });
     if (term.length == 0) {
       setState(() {
         countryNotFound = false;
@@ -59,17 +66,26 @@ class AppInputFieldsState extends State<AppInputFields> {
       children: [
         new Row(
           mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             new Container(
               width: 200,
-              child: new TextFormField(onChanged: this.fetchCountries),
+              child: new TextFormField(
+                decoration: InputDecoration(
+                  hintText: 'Enter the country name',
+                ),
+                onChanged: this.fetchCountries
+              ),
             ),
-            new IconButton(
-              icon: new Icon(Icons.done),
-              onPressed: () {
-                if (this.countryProps != null) this.addCountry(this.countryProps);
-              },
-            ),
+            new Visibility(
+              visible: this.countryProps['name'] != "default" && this.enteredCountryName != "",
+              child: new TextButton(
+                child: new Text(this.countryProps['name'] + "?", style: new TextStyle(fontSize: 12.0, fontWeight: FontWeight.bold)),
+                onPressed: (){
+                  this.addCountry(this.countryProps);
+                },
+              ),
+            )
           ],
         ),
         new Visibility(
